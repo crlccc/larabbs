@@ -7,7 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable{
+        notify as protected laravelNotify;
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -32,9 +34,31 @@ class User extends Authenticatable
         return $this->hasMany(Topic::class);
     }
 
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
 
     public function isAuthorOf($model)
     {
         return $this->id==$model->user_id;
+    }
+
+    public function notify($instance)
+    {
+        //如果要通知的的人是当前用户，就不必通知
+        if ($this->id==\Auth::id()){
+            return;
+        }
+        $this->increment('notification_count');
+        $this->laravelNotify($instance);
+    }
+
+   
+    public function markAsRead()
+    {
+        $this->notifications_count=0;
+        $this->save();
+        $this->unreadNotifications()->markAsRead();
     }
 }

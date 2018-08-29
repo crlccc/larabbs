@@ -42,6 +42,13 @@
                     <li>
                         <a href="{{route('topics.create')}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                     </li>
+                    {{--消息通知--}}
+                    <li>
+                        <a href="{{route('notifications.index')}}" class="notifications-bage" style="margin-top: -14px"></a>
+                        <span class="badge badge-{{Auth::user()->notification_count>0 ? 'hint':'fade'}}" title="消息提醒">
+                            {{Auth::user()->notification_count}}
+                        </span>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="user-avatar pull-left" style="margin-right:8px; margin-top:-5px;">
